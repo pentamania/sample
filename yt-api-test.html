@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>youtube api search test</title>
+</head>
+<body>
+
+<input type="text" name="" id="searchInput" value="javascript" />
+<button type="button" id="searchButton">search</button>
+
+<h2>Result</h2>
+<div id="ytResults"></div>
+
+<script type="text/javascript">
+  var API = "https://us-central1-youtimania.cloudfunctions.net/search";
+  console.log(API);
+
+  searchButton.onclick = function(e) {
+    var searchWord = searchInput.value;
+    var reqBody = {
+      query: searchWord,
+      resultNum: 8,
+      // orderType: "date",
+    };
+    console.log("searching...", searchWord);
+    fetch(API, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(reqBody),
+    })
+    .then(res => {
+      return res.json();
+    })
+    .then(result => {
+      console.log(result);
+      result.items.forEach(function(item) {
+        // console.log(item.snippet.title);
+
+        var thumbnailUrl = item.snippet.thumbnails.default.url;
+        var img = document.createElement('img');
+        img.src = thumbnailUrl;
+
+        var videoId = item.id.videoId;
+        var anchor = document.createElement('a');
+        anchor.target = "_new";
+        anchor.href = `https://www.youtube.com/watch?v=${videoId}`;
+        anchor.appendChild(img);
+        ytResults.appendChild(anchor);
+      }.bind(this));
+    });
+  }
+</script>
+</body>
+</html>
