@@ -1,3 +1,3 @@
 # Examples
 
-TODO: show links
+- [foo](foo/index.html)
